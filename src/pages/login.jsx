@@ -9,7 +9,7 @@ const Login = () => {
     const { navigate } = useContext(MainContext)
 
     // Online Server
-    // const baseUrl = "https://ichwunden-api.faiz-web.my.id"
+    // const baseUrl = "https://api.ichwunden.my.id"
     // Local Server
     const baseUrl = "http://localhost:4000"
 

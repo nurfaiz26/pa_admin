@@ -16,7 +16,7 @@ const ClassificationsForm = () => {
             ctscan: "",
             label: "",
             classification: "",
-            probability: ""
+            accuracy: ""
         }
     )
 
@@ -32,7 +32,7 @@ const ClassificationsForm = () => {
                         ctscan: data.ctscan,
                         label: data.label,
                         classification: data.classification,
-                        probability: data.probability
+                        accuracy: data.accuracy
                     }
                 )
                 setLoading(false)
@@ -61,8 +61,8 @@ const ClassificationsForm = () => {
             setInput({ ...input, label: value })
         } else if (name === "class") {
             setInput({ ...input, classification: value })
-        } else if (name === "probability") {
-            setInput({ ...input, probability: value })
+        } else if (name === "accuracy") {
+            setInput({ ...input, accuracy: value })
         }
     }
 
@@ -75,13 +75,13 @@ const ClassificationsForm = () => {
             ctscan,
             label,
             classification,
-            probability,
+            accuracy,
         } = input
 
 
         if (IdData !== undefined) {
             console.log(input)
-            axios.patch(`${baseUrl}/class-results/${IdData}`, {patientId, doctorId, date, ctscan, label, classification, probability})
+            axios.patch(`${baseUrl}/class-results/${IdData}`, {patientId, doctorId, date, ctscan, label, classification, accuracy})
                 .then((res) => {
                     navigate(`/classifications/${IdData}`)
                     window.location.reload()
@@ -237,19 +237,19 @@ const ClassificationsForm = () => {
                                 </div>
                                 <div>
                                     <label
-                                        htmlFor="probability"
+                                        htmlFor="accuracy"
                                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                     >
-                                        Probability
+                                        Accuracy
                                     </label>
                                     <input
                                         type="text"
-                                        name="probability"
-                                        id="probability"
-                                        placeholder="Probability"
+                                        name="accuracy"
+                                        id="accuracy"
+                                        placeholder="Accuracy"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         onChange={handleChange}
-                                        value={input.probability}
+                                        value={input.accuracy}
                                         required
                                     />
                                 </div>

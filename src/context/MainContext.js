@@ -6,7 +6,7 @@ export const MainContext = createContext()
 
 export const MainProvider = (props) => {
     // Online Server
-    // const baseUrl = "https://ichwunden-api.faiz-web.my.id/admin"
+    // const baseUrl = "https://api.ichwunden.my.id/admin"
     // Local Server
     const baseUrl = "http://localhost:4000/admin"
     let navigate = useNavigate()

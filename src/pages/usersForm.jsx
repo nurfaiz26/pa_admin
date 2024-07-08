@@ -2,9 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { MainContext } from "../context/MainContext";
+import Cookies from "js-cookie"
 
 const UsersForm = () => {
     let { IdData } = useParams()
+    const token = Cookies.get('token') 
     const [input, setInput] = useState(
         {
             name: "",
@@ -22,7 +24,11 @@ const UsersForm = () => {
 
     useEffect(() => {
         function fetctData() {
-            axios.get(`${baseUrl}/users/${IdData}`).then((res) => {
+            axios.get(`${baseUrl}/users/${IdData}`, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then((res) => {
                 let data = res.data.data[0]
                 setInput(
                     {
@@ -45,7 +51,7 @@ const UsersForm = () => {
             setLoading(false)
         }
 
-    }, [baseUrl, setInput, IdData])
+    }, [baseUrl, setInput, IdData, token])
 
     const handleChange = (event) => {
         let name = event.target.name
@@ -91,7 +97,11 @@ const UsersForm = () => {
                         setIsPasswordRight(false)
                     }  else {
                         setIsPasswordRight(true)
-                        axios.post(`${baseUrl}/users`, { name, role, email, username, password })
+                        axios.post(`${baseUrl}/users`, { name, role, email, username, password }, {
+                            headers: {
+                                "Authorization": "Bearer " + token
+                            }
+                        })
                         .then((res) => {
                             navigate("/users")
                             window.location.reload()
@@ -104,14 +114,23 @@ const UsersForm = () => {
             } else {
                 if(password === undefined || password === "") {
                     setIsPasswordRight(true)
-                    axios.patch(`${baseUrl}/users/${IdData}`, { name, role, email, username })
+                    axios.patch(`${baseUrl}/users/${IdData}`, { name, role, email, username }, {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    })
                     .then((res) => {
                         navigate(`/users/${IdData}`)
+                        alert('Data updated!')
                         window.location.reload()
                     })
                 } else {
                     setIsPasswordRight(true)
-                    axios.patch(`${baseUrl}/users/${IdData}`, { name, role, email, username, password })
+                    axios.patch(`${baseUrl}/users/${IdData}`, { name, role, email, username, password }, {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    })
                         .then((res) => {
                             navigate(`/users/${IdData}`)
                             window.location.reload()

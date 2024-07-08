@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MainContext } from "../context/MainContext";
 import axios from "axios";
+import Cookies from "js-cookie"
 
 const ClassificationsForm = () => {
     let { IdData } = useParams()
+    const token = Cookies.get('token')
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const { baseUrl, navigate } = useContext(MainContext)
@@ -22,7 +24,11 @@ const ClassificationsForm = () => {
 
     useEffect(() => {
         function fetctData() {
-            axios.get(`${baseUrl}/class-results/${IdData}`).then((res) => {
+            axios.get(`${baseUrl}/class-results/${IdData}`, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then((res) => {
                 let data = res.data.data[0]
                 setInput(
                     {
@@ -43,7 +49,7 @@ const ClassificationsForm = () => {
         }
         fetctData()
 
-    }, [IdData, baseUrl])
+    }, [IdData, baseUrl, token])
 
     const handleChange = (event) => {
         let name = event.target.name
@@ -81,7 +87,11 @@ const ClassificationsForm = () => {
 
         if (IdData !== undefined) {
             console.log(input)
-            axios.patch(`${baseUrl}/class-results/${IdData}`, {patientId, doctorId, date, ctscan, label, classification, accuracy})
+            axios.patch(`${baseUrl}/class-results/${IdData}`, {patientId, doctorId, date, ctscan, label, classification, accuracy}, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
                 .then((res) => {
                     navigate(`/classifications/${IdData}`)
                     window.location.reload()

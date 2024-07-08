@@ -1,13 +1,19 @@
 import React, { useContext } from "react";
 import { MainContext } from "../context/MainContext";
 import axios from "axios";
+import Cookies from "js-cookie"
 
 const Users = () => {
     const { dataUsers, setCurrentId, navigate, baseUrl } = useContext(MainContext)
+    const token = Cookies.get('token')
 
     const handleDelete = (event) => {
         let idData = parseInt(event.target.value)
-        axios.delete(`${baseUrl}/users/${idData}`)
+        axios.delete(`${baseUrl}/users/${idData}`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
         window.location.reload()
     }
 

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie"
 
 export const MainContext = createContext()
 
@@ -15,34 +16,50 @@ export const MainProvider = (props) => {
     const [dataPatients, setDataPatients] = useState(null)
     const [fetchStatus, setFetchStatus] = useState(true)
     const [currentId, setCurrentId] = useState(-1)
+    let token = Cookies.get('token')
 
     useEffect(() => {
 
         if (fetchStatus === true) {
 
-            axios.get(`${baseUrl}/users`).then((res) => {
-                setDataUsers([...res.data.data])
-            }).catch((error) => {
-                console.log(error)
-            })
-            
-            axios.get(`${baseUrl}/class-results`).then((res) => {
-                setDataClassifications([...res.data.data])
-            }).catch((error) => {
-                console.log(error)
-            })
-            
-            axios.get(`${baseUrl}/patients`).then((res) => {
-                setDataPatients([...res.data.data])
-            }).catch((error) => {
-                console.log(error)
-            })
+            if (token !== undefined) {
+                axios.get(`${baseUrl}/users`, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }).then((res) => {
+                    setDataUsers([...res.data.data])
+                }).catch((error) => {
+                    console.log(error)
+                })
+
+                axios.get(`${baseUrl}/class-results`, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }).then((res) => {
+                    setDataClassifications([...res.data.data])
+                }).catch((error) => {
+                    console.log(error)
+                })
+
+                axios.get(`${baseUrl}/patients`, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }).then((res) => {
+                    setDataPatients([...res.data.data])
+                }).catch((error) => {
+                    console.log(error)
+                })
+            }
+
 
             setFetchStatus(false)
         }
 
 
-    }, [fetchStatus, setFetchStatus])
+    }, [fetchStatus, setFetchStatus, token])
 
 
     return (

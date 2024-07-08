@@ -1,13 +1,19 @@
 import React, { useContext } from "react";
 import { MainContext } from "../context/MainContext";
 import axios from "axios";
+import Cookies from "js-cookie"
 
 const Classifications = () => {
     const { dataClassifications, baseUrl, navigate, setCurrentId } = useContext(MainContext)
+    const token = Cookies.get("token")
 
     const handleDelete = (event) => {
         let idData = parseInt(event.target.value)
-        axios.delete(`${baseUrl}/class-results/${idData}`).then((res) => {
+        axios.delete(`${baseUrl}/class-results/${idData}`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        }).then((res) => {
             window.location.reload()
         })
     }

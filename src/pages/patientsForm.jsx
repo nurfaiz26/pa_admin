@@ -2,9 +2,12 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { MainContext } from "../context/MainContext";
+import Cookies from "js-cookie"
+
 
 const PatientsForm = () => {
     let { IdData } = useParams()
+    const token = Cookies.get('token')
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const { baseUrl, navigate } = useContext(MainContext)
@@ -16,7 +19,11 @@ const PatientsForm = () => {
 
     useEffect(() => {
         function fetctData() {
-            axios.get(`${baseUrl}/patients/${IdData}`).then((res) => {
+            axios.get(`${baseUrl}/patients/${IdData}`, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then((res) => {
                 let data = res.data.data[0]
                 setInput(
                     {
@@ -36,7 +43,7 @@ const PatientsForm = () => {
         }
 
 
-    }, [IdData, baseUrl])
+    }, [IdData, baseUrl, token])
 
     const handleChange = (event) => {
         let name = event.target.name
@@ -55,13 +62,22 @@ const PatientsForm = () => {
 
 
         if (IdData !== undefined) {
-            axios.patch(`${baseUrl}/patients/${IdData}`, { patientName })
+            axios.patch(`${baseUrl}/patients/${IdData}`, { patientName }, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
                 .then((res) => {
                     navigate(`/patients/${IdData}`)
+                    alert('Data updated!')
                     window.location.reload()
                 })
         } else {
-            axios.post(`${baseUrl}/patients`, { patientName })
+            axios.post(`${baseUrl}/patients`, { patientName }, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
                 .then((res) => {
                     navigate(`/patients`)
                     window.location.reload()

@@ -42,6 +42,7 @@ const Login = () => {
                         Cookies.set('token', token)
                         setError(null)
                         navigate('/dashboard')
+                        window.location.reload()
                     } else {
                         setError("Anda bukan admin!")
                         console.log(error)
